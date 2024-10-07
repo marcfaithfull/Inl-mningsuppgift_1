@@ -10,28 +10,14 @@ public class Detector implements Device {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public void turnOn() {
-        if (!isOn) {
-            System.out.println("------------------------------------------------------------------------------------------------------\nDetectors: ACTIVATED");
-            isOn = true;
-        } else {
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe detectors are already activated");
-        }
+        isOn = true;
     }
 
     @Override
     public void turnOff() {
-        if (isOn) {
-            System.out.println("------------------------------------------------------------------------------------------------------\nDetectors: DEACTIVATED");
-            isOn = false;
-        } else {
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe detectors are already deactivated");
-        }
+        isOn = false;
     }
 
     public boolean isOn() {

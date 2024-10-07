@@ -1,5 +1,5 @@
 public class Siren implements Device {
-    private static boolean isOn;
+    private  boolean isOn;
 
     public Siren(){
         this.isOn = false;
@@ -13,15 +13,10 @@ public class Siren implements Device {
 
     @Override
     public void turnOff() {
-        if (!this.isOn) {
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe siren is already off");
-        } else {
-            this.isOn = false;
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe siren has been turned off");
-        }
+        this.isOn = false;
     }
 
-    public static boolean getSirenStatus() {
+    public boolean getSirenStatus() {
         return isOn;
     }
 }

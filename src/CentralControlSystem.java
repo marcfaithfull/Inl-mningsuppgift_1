@@ -40,7 +40,8 @@ public class CentralControlSystem {
         if (!detector.isOn()) {
             System.out.println("------------------------------------------------------------------------------------------------------\nYou must activate the detectors before you can start this simulation");
         } else {
-            newRoom.getDetectorName();
+            String detectorName = newRoom.getDetectorName();
+            System.out.println("------------------------------------------------------------------------------------------------------\n" + detectorName + " has been triggered");
             turnOnSiren();
         }
     }
@@ -51,6 +52,7 @@ public class CentralControlSystem {
         Room pickedRoom = rooms.get(randomIndex);
         System.out.println("------------------------------------------------------------------------------------------------------\nA fire has been detected in " + pickedRoom.getRoomName());
         this.sprinkledRoom = pickedRoom;
+        System.out.println("The sprinklerSystem has been activated!");
         sprinklerSystem.turnOn();
         siren.turnOn();
     }
@@ -84,17 +86,27 @@ public class CentralControlSystem {
             System.out.println("------------------------------------------------------------------------------------------------------\nThe sprinkler is already off");
         } else {
             sprinklerSystem.turnOff();
-            System.out.println("in " + sprinkledRoom.getRoomName());
+            System.out.println("------------------------------------------------------------------------------------------------------\nThe sprinklerSystem has been turned off in " + sprinkledRoom.getRoomName());
             sprinkledRoom = null;
         }
     }
 
-    public void activateDetectors() {
-        detector.turnOn();
+    public void activateDetectors(){
+        if (!detector.isOn()) {
+            System.out.println("------------------------------------------------------------------------------------------------------\nDetectors: ACTIVATED");
+            detector.turnOn();
+        } else {
+            System.out.println("------------------------------------------------------------------------------------------------------\nThe detectors are already activated");
+        }
     }
 
     public void deactivateDetectors() {
-        detector.turnOff();
+        if (detector.isOn()) {
+            System.out.println("------------------------------------------------------------------------------------------------------\nDetectors: DEACTIVATED");
+            detector.turnOff();
+        } else {
+            System.out.println("------------------------------------------------------------------------------------------------------\nThe detectors are already deactivated");
+        }
     }
 
     public void turnOnSiren() {
@@ -102,7 +114,12 @@ public class CentralControlSystem {
     }
 
     public void turnOffSiren() {
-        siren.turnOff();
+        if (!this.siren.getSirenStatus()) {
+            System.out.println("------------------------------------------------------------------------------------------------------\nThe siren is already off");
+        } else {
+            siren.turnOff();
+            System.out.println("------------------------------------------------------------------------------------------------------\nThe siren has been turned off");
+        }
     }
 
     public void addDetectors(String name) {

@@ -20,9 +20,9 @@ public class Room {
         return roomName;
     }
 
-    public void getDetectorName() {
+    public String getDetectorName() {
         int detection = random.nextInt(detectors.size());
         Detector detected = detectors.get(detection);
-        System.out.println("------------------------------------------------------------------------------------------------------\n" + detected.getName() + " has been triggered");
+        return detected.getName();
     }
 }
