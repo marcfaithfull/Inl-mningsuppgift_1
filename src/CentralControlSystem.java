@@ -2,30 +2,25 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class CentralControlSystem {
-
     private ArrayList<Room> rooms;
-    private SprinklerSystem sprinklerSystem;
-    private Room sprinkledRoom;
     private Siren siren;
-    private Room newRoom;
-    private Detector detector;
+    private Random random = new Random();
+    private boolean detectorsAreOn = false;
+    private boolean sprinklersAreOn = false;
 
     public CentralControlSystem() {
         this.rooms = new ArrayList<>();
-        this.sprinklerSystem = new SprinklerSystem();
         this.siren = new Siren();
-        this.newRoom = new Room("newRoom");
-        this.detector = new Detector("newDetector");
     }
 
     public void loadMenu() {
-        System.out.print("------------------------------------------------------------------------------------------------------\nCENTRAL CONTROL SYSTEM   |   ");
+        System.out.print("----------------------------------------------------------------------------\nCENTRAL CONTROL SYSTEM  |  ");
 
         showDetectorStatus();
         showSirenStatus();
         showSprinklerStatus();
 
-        System.out.println("------------------------------------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------");
         System.out.println("1] Activate the detectors");
         System.out.println("2] Deactivate the detectors");
         System.out.println("3] Simulate a new random detection");
@@ -36,156 +31,166 @@ public class CentralControlSystem {
         System.out.print("Option: ");
     }
 
-    public void simulateDetection() {
-        if (!detector.isOn()) {
-            System.out.println("------------------------------------------------------------------------------------------------------\nYou must activate the detectors before you can start this simulation");
-        } else {
-            String detectorName = newRoom.getDetectorName();
-            System.out.println("------------------------------------------------------------------------------------------------------\n" + detectorName + " has been triggered");
-            turnOnSiren();
+    public void showSprinklerStatus(){
+        if (sprinklersAreOn) {
+            System.out.println("Sprinklers: ON");
         }
-    }
-
-    public void simulateFire() {
-        Random rand = new Random();
-        int randomIndex = rand.nextInt(rooms.size());
-        Room pickedRoom = rooms.get(randomIndex);
-        System.out.println("------------------------------------------------------------------------------------------------------\nA fire has been detected in " + pickedRoom.getRoomName());
-        this.sprinkledRoom = pickedRoom;
-        System.out.println("The sprinklerSystem has been activated!");
-        sprinklerSystem.turnOn();
-        siren.turnOn();
-    }
-
-    public void showSprinklerStatus() {
-        if (sprinkledRoom == null) {
-            System.out.println("   |   Sprinklers: OFF");
-        } else {
-            System.out.println("   |   Sprinklers: ON (in " + sprinkledRoom.getRoomName() + ")");
+        else {
+            System.out.println("Sprinklers: OFF");
         }
     }
 
     public void showSirenStatus() {
-        if (!siren.getSirenStatus()) {
-            System.out.print("   |   Siren: OFF");
-        } else {
-            System.out.print("   |   Siren: ON");
+        if (siren.getSirenStatus()) {
+            System.out.print("  |  Siren: ON  |  ");
+        }
+        else {
+            System.out.print("  |  Siren: OFF  |  ");
         }
     }
 
     public void showDetectorStatus() {
-        if (!detector.isOn()) {
-            System.out.print("Detectors: OFF");
-        } else {
+        if (detectorsAreOn) {
             System.out.print("Detectors: ON");
         }
-    }
-
-    public void turnOffSprinkler() {
-        if (sprinkledRoom == null) {
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe sprinkler is already off");
-        } else {
-            sprinklerSystem.turnOff();
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe sprinklerSystem has been turned off in " + sprinkledRoom.getRoomName());
-            sprinkledRoom = null;
+        else {
+            System.out.print("Detectors: OFF");
         }
     }
 
-    public void activateDetectors(){
-        if (!detector.isOn()) {
-            System.out.println("------------------------------------------------------------------------------------------------------\nDetectors: ACTIVATED");
-            detector.turnOn();
-        } else {
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe detectors are already activated");
+    public void activateDetectors() {
+        if (detectorsAreOn) {
+            System.out.println("The detectors are already on");
+        }
+        else {
+            for (Room room : rooms) {
+                room.turnOnAllDetectors();
+            }
+            System.out.println("The detectors have been: ACTIVATED");
+            detectorsAreOn = true;
         }
     }
 
     public void deactivateDetectors() {
-        if (detector.isOn()) {
-            System.out.println("------------------------------------------------------------------------------------------------------\nDetectors: DEACTIVATED");
-            detector.turnOff();
-        } else {
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe detectors are already deactivated");
+        if (!detectorsAreOn) {
+            System.out.println("The detectors are already off");
+        }
+        else {
+            for (Room room : rooms) {
+                room.turnOffDetectors();
+            }
+            System.out.println("The detectors have been: DEACTIVATED");
+            detectorsAreOn = false;
         }
     }
 
-    public void turnOnSiren() {
-        siren.turnOn();
+    public void simulateDetection() {
+        if (detectorsAreOn) {
+            switch (random.nextInt(3)) {
+                case 0:
+                    boolean spaceApe = true;
+                    while (spaceApe) {
+                        ArrayList<Room> rooms = this.rooms;
+                        int chosenRoom = random.nextInt(rooms.size());
+                        Room oneRoomToRuleThemAll = rooms.get(chosenRoom);
+                        ArrayList<Detector> doorDetectors = oneRoomToRuleThemAll.getDoorDetectors();
+                        if (!doorDetectors.isEmpty()) {
+                            int chosenDetector = random.nextInt(doorDetectors.size());
+                            Detector doorDetector = doorDetectors.get(chosenDetector);
+                            doorDetector.setOn(true);
+                            System.out.println(doorDetector.getName() + oneRoomToRuleThemAll.getName() + " has been triggered");
+                            siren.turnOn();
+                            spaceApe = false;
+                        }
+                    }
+                    break;
+
+                case 1:
+                    boolean bananaMan = true;
+                    while (bananaMan) {
+                        ArrayList<Room> rooms = this.rooms;
+                        int chosenRoom = random.nextInt(rooms.size());
+                        Room oneRoomToRuleThemAll = rooms.get(chosenRoom);
+                        ArrayList<Detector> windowDetectors = oneRoomToRuleThemAll.getWindowDetectors();
+                        if (!windowDetectors.isEmpty()) {
+                            int chosenDetector = random.nextInt(windowDetectors.size());
+                            Detector windowDetector = windowDetectors.get(chosenDetector);
+                            windowDetector.setOn(true);
+                            System.out.println(windowDetector.getName() + oneRoomToRuleThemAll.getName() + " has been triggered");
+                            bananaMan = false;
+                            siren.turnOn();
+                        }
+                    }
+                    break;
+
+                case 2:
+                    boolean beetleJuice = true;
+                    while (beetleJuice) {
+                        ArrayList<Room> rooms = this.rooms;
+                        int chosenRoom = random.nextInt(rooms.size());
+                        Room oneRoomToRuleThemAll = rooms.get(chosenRoom);
+                        MotionDetector motionDetector = oneRoomToRuleThemAll.getMotionDetector();
+                        if (motionDetector != null) {
+                            motionDetector.setOn(true);
+                            System.out.println(motionDetector.getName() + oneRoomToRuleThemAll.getName() + " has been triggered");
+                            beetleJuice = false;
+                            siren.turnOn();
+                        }
+                    }
+                    break;
+            }
+        }
+        else {
+            System.out.println("You need to activate the detectors before you can start this simulation");
+        }
+    }
+
+    public void simulateFire() {
+        boolean hatchetMurder = true;
+        while (hatchetMurder) {
+            int roomInt = random.nextInt(rooms.size());
+            Room roomOnFire = rooms.get(roomInt);
+            if (roomOnFire.getSmokeDetector() != null) {
+                roomOnFire.getSmokeDetector().setOn(true);
+                if (roomOnFire.getSmokeDetector().isOn()) {
+                    System.out.println("There is a fire in " + roomOnFire.getName() + "!");
+                    roomOnFire.getSprinkler().turnOn();
+                    System.out.println(" are coming from " + roomOnFire.getName());
+                    siren.turnOn();
+                    sprinklersAreOn = true;
+                    hatchetMurder = false;
+                }
+            }
+        }
+    }
+
+    public void turnOffSprinkler() {
+        boolean monkeyFinger = false;
+        for (Room room : rooms) {
+            if (room.getSprinkler() != null && room.getSprinkler().isOn()) {
+                System.out.println("The sprinkler in " + room.getName() + " has been turned off");
+                room.getSprinkler().turnOff();
+                monkeyFinger = true;
+                sprinklersAreOn = false;
+            }
+        }
+
+        if (!monkeyFinger) {
+            System.out.println("There are no sprinklers to turn off!");
+        }
     }
 
     public void turnOffSiren() {
-        if (!this.siren.getSirenStatus()) {
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe siren is already off");
-        } else {
+        if (siren.getSirenStatus()) {
+            System.out.println("The siren has been turned off");
             siren.turnOff();
-            System.out.println("------------------------------------------------------------------------------------------------------\nThe siren has been turned off");
+        }
+        else {
+            System.out.println("The siren is already off");
         }
     }
 
-    public void addDetectors(String name) {
-        newRoom.addDetectors(name);
-    }
-
-    public void loadHouseInformation() {
-
-        Room bedroom1 = new Room("bedroom 1");
-        rooms.add(bedroom1);
-
-        Room bedroom2 = new Room("bedroom 2");
-        rooms.add(bedroom2);
-
-        Room bedroom3 = new Room("bedroom 3");
-        rooms.add(bedroom3);
-
-        Room bedroom4 = new Room("bedroom 4");
-        rooms.add(bedroom4);
-
-        Room bedroom5 = new Room("bedroom 5");
-        rooms.add(bedroom5);
-
-        Room kitchen = new Room("the Kitchen");
-        rooms.add(kitchen);
-
-        Room livingRoom = new Room("the living room");
-        rooms.add(livingRoom);
-
-        Room hall = new Room("the hall");
-        rooms.add(hall);
-
-        Room garage = new Room("the garage");
-        rooms.add(garage);
-
-        addDetectors("Window detector 1 in bedroom 1");
-        addDetectors("Window detector 2 in bedroom 1");
-        addDetectors("The door detector in bedroom 1");
-
-        addDetectors("The window detector in bedroom 2");
-        addDetectors("The door detector in bedroom 2");
-
-        addDetectors("The window detector in bedroom 3");
-        addDetectors("The door detector in bedroom 3");
-
-        addDetectors("Window detector 1 in bedroom 4");
-        addDetectors("Window detector 2 in bedroom 4");
-        addDetectors("The door detector in bedroom 4");
-
-        addDetectors("The window detector in bedroom 5");
-        addDetectors("The door detector in bedroom 5");
-
-        addDetectors("The window detector in the kitchen");
-
-        addDetectors("The window detector in the living room");
-        addDetectors("The door detector in the living room");
-        addDetectors("The motion detector in the living room");
-
-        addDetectors("The window detector in the hall");
-        addDetectors("The door detector in the hall");
-        addDetectors("The motion detector in the hall");
-
-        addDetectors("The window detector in the garage");
-        addDetectors("Door detector 1 in the garage");
-        addDetectors("Door detector 2 in the garage");
-
-        addDetectors("The motion detector in the pool area");
+    public ArrayList<Room> getRooms() {
+        return rooms;
     }
 }

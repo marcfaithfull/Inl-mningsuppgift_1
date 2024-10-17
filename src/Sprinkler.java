@@ -1,18 +1,16 @@
-public class Detector implements Device {
+public class Sprinkler implements Device {
     private String name;
-    private boolean isOn = false;
+    private boolean isOn;
 
-    public Detector(String name){
+    public Sprinkler(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
+        this.isOn = false;
     }
 
     @Override
     public void turnOn() {
         isOn = true;
+        System.out.print("(((Sprinkler noises)))");
     }
 
     @Override
@@ -20,12 +18,16 @@ public class Detector implements Device {
         isOn = false;
     }
 
-    public boolean isOn() {
-        return isOn;
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isOn() {
+        return isOn;
     }
 
     public void setOn(boolean on) {

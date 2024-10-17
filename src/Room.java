@@ -1,28 +1,76 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Room {
-    private Random random = new Random();
-    private String roomName;
-    private ArrayList<Detector> detectors;
+    private String name;
+    private ArrayList<Detector> doorDetectors;
+    private ArrayList<Detector> windowDetectors;
+    private SmokeDetector smokeDetector;
+    private MotionDetector motionDetector;
+    private Sprinkler sprinkler;
 
     public Room(String name) {
-        this.roomName = name;
-        this.detectors = new ArrayList<>();
+        this.name = name;
+        this.doorDetectors = new ArrayList<>();
+        this.windowDetectors = new ArrayList<>();
     }
 
-    public void addDetectors(String name) {
-        Detector detector = new Detector(name);
-        detectors.add(detector);
+    public void turnOnAllDetectors() {
+        for (Detector doorDetector : doorDetectors) {
+            doorDetector.turnOn();
+        }
+        for (Detector windowDetector : windowDetectors) {
+            windowDetector.turnOn();
+        }
+        if (motionDetector != null) {
+            motionDetector.turnOn();
+        }
     }
 
-    public String getRoomName() {
-        return roomName;
+    public void turnOffDetectors() {
+        for (Detector doorDetector : doorDetectors) {
+            doorDetector.turnOff();
+        }
+        for (Detector windowDetector : windowDetectors) {
+            windowDetector.turnOff();
+        }
+        if (motionDetector != null) {
+            motionDetector.turnOff();
+        }
     }
 
-    public String getDetectorName() {
-        int detection = random.nextInt(detectors.size());
-        Detector detected = detectors.get(detection);
-        return detected.getName();
+    public String getName() {
+        return name;
+    }
+
+    public SmokeDetector getSmokeDetector() {
+        return smokeDetector;
+    }
+
+    public void setSmokeDetector(SmokeDetector smokeDetector) {
+        this.smokeDetector = smokeDetector;
+    }
+
+    public ArrayList<Detector> getDoorDetectors() {
+        return doorDetectors;
+    }
+
+    public ArrayList<Detector> getWindowDetectors() {
+        return windowDetectors;
+    }
+
+    public MotionDetector getMotionDetector() {
+        return motionDetector;
+    }
+
+    public void setMotionDetector(MotionDetector motionDetector) {
+        this.motionDetector = motionDetector;
+    }
+
+    public Sprinkler getSprinkler() {
+        return sprinkler;
+    }
+
+    public void setSprinkler(Sprinkler sprinkler) {
+        this.sprinkler = sprinkler;
     }
 }
