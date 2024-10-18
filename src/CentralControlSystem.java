@@ -85,11 +85,12 @@ public class CentralControlSystem {
     }
 
     public void simulateDetection() {
+        boolean chooseDetector = true;
         if (detectorsAreOn) {
             switch (random.nextInt(3)) {
+
                 case 0:
-                    boolean spaceApe = true;
-                    while (spaceApe) {
+                    while (chooseDetector) {
                         ArrayList<Room> rooms = this.rooms;
                         int chosenRoom = random.nextInt(rooms.size());
                         Room oneRoomToRuleThemAll = rooms.get(chosenRoom);
@@ -100,14 +101,13 @@ public class CentralControlSystem {
                             doorDetector.setOn(true);
                             System.out.println(doorDetector.getName() + oneRoomToRuleThemAll.getName() + " has been triggered");
                             siren.turnOn();
-                            spaceApe = false;
+                            chooseDetector = false;
                         }
                     }
                     break;
 
                 case 1:
-                    boolean bananaMan = true;
-                    while (bananaMan) {
+                    while (chooseDetector) {
                         ArrayList<Room> rooms = this.rooms;
                         int chosenRoom = random.nextInt(rooms.size());
                         Room oneRoomToRuleThemAll = rooms.get(chosenRoom);
@@ -117,15 +117,14 @@ public class CentralControlSystem {
                             Detector windowDetector = windowDetectors.get(chosenDetector);
                             windowDetector.setOn(true);
                             System.out.println(windowDetector.getName() + oneRoomToRuleThemAll.getName() + " has been triggered");
-                            bananaMan = false;
+                            chooseDetector = false;
                             siren.turnOn();
                         }
                     }
                     break;
 
                 case 2:
-                    boolean beetleJuice = true;
-                    while (beetleJuice) {
+                    while (chooseDetector) {
                         ArrayList<Room> rooms = this.rooms;
                         int chosenRoom = random.nextInt(rooms.size());
                         Room oneRoomToRuleThemAll = rooms.get(chosenRoom);
@@ -133,7 +132,7 @@ public class CentralControlSystem {
                         if (motionDetector != null) {
                             motionDetector.setOn(true);
                             System.out.println(motionDetector.getName() + oneRoomToRuleThemAll.getName() + " has been triggered");
-                            beetleJuice = false;
+                            chooseDetector = false;
                             siren.turnOn();
                         }
                     }
@@ -146,8 +145,8 @@ public class CentralControlSystem {
     }
 
     public void simulateFire() {
-        boolean hatchetMurder = true;
-        while (hatchetMurder) {
+        boolean chooseRoom = true;
+        while (chooseRoom) {
             int roomInt = random.nextInt(rooms.size());
             Room roomOnFire = rooms.get(roomInt);
             if (roomOnFire.getSmokeDetector() != null) {
@@ -158,24 +157,24 @@ public class CentralControlSystem {
                     System.out.println(" are coming from " + roomOnFire.getName());
                     siren.turnOn();
                     sprinklersAreOn = true;
-                    hatchetMurder = false;
+                    chooseRoom = false;
                 }
             }
         }
     }
 
     public void turnOffSprinkler() {
-        boolean monkeyFinger = false;
+        boolean sprinklersAreOff = false;
         for (Room room : rooms) {
             if (room.getSprinkler() != null && room.getSprinkler().isOn()) {
                 System.out.println("The sprinkler in " + room.getName() + " has been turned off");
                 room.getSprinkler().turnOff();
-                monkeyFinger = true;
+                sprinklersAreOff = true;
                 sprinklersAreOn = false;
             }
         }
 
-        if (!monkeyFinger) {
+        if (!sprinklersAreOff) {
             System.out.println("There are no sprinklers to turn off!");
         }
     }
