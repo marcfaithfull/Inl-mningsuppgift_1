@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class CentralControlSystem {
-    private ArrayList<Room> rooms;
-    private Siren siren;
-    private Random random = new Random();
+    private final ArrayList<Room> rooms;
+    private final Siren siren;
+    private final Random random = new Random();
     private boolean detectorsAreOn = false;
     private boolean sprinklersAreOn = false;
 
@@ -34,8 +34,7 @@ public class CentralControlSystem {
     public void showSprinklerStatus(){
         if (sprinklersAreOn) {
             System.out.println("Sprinklers: ON");
-        }
-        else {
+        } else {
             System.out.println("Sprinklers: OFF");
         }
     }
@@ -43,8 +42,7 @@ public class CentralControlSystem {
     public void showSirenStatus() {
         if (siren.getSirenStatus()) {
             System.out.print("  |  Siren: ON  |  ");
-        }
-        else {
+        } else {
             System.out.print("  |  Siren: OFF  |  ");
         }
     }
@@ -52,8 +50,7 @@ public class CentralControlSystem {
     public void showDetectorStatus() {
         if (detectorsAreOn) {
             System.out.print("Detectors: ON");
-        }
-        else {
+        } else {
             System.out.print("Detectors: OFF");
         }
     }
@@ -61,8 +58,7 @@ public class CentralControlSystem {
     public void activateDetectors() {
         if (detectorsAreOn) {
             System.out.println("The detectors are already on");
-        }
-        else {
+        } else {
             for (Room room : rooms) {
                 room.turnOnAllDetectors();
             }
@@ -74,8 +70,7 @@ public class CentralControlSystem {
     public void deactivateDetectors() {
         if (!detectorsAreOn) {
             System.out.println("The detectors are already off");
-        }
-        else {
+        } else {
             for (Room room : rooms) {
                 room.turnOffDetectors();
             }
@@ -138,8 +133,7 @@ public class CentralControlSystem {
                     }
                     break;
             }
-        }
-        else {
+        } else {
             System.out.println("You need to activate the detectors before you can start this simulation");
         }
     }
@@ -164,18 +158,16 @@ public class CentralControlSystem {
     }
 
     public void turnOffSprinkler() {
-        boolean sprinklersAreOff = false;
-        for (Room room : rooms) {
-            if (room.getSprinkler() != null && room.getSprinkler().isOn()) {
-                System.out.println("The sprinkler in " + room.getName() + " has been turned off");
-                room.getSprinkler().turnOff();
-                sprinklersAreOff = true;
-                sprinklersAreOn = false;
-            }
-        }
-
-        if (!sprinklersAreOff) {
+        if (!sprinklersAreOn) {
             System.out.println("There are no sprinklers to turn off!");
+        } else {
+            for (Room room : rooms) {
+                if (room.getSprinkler() != null && room.getSprinkler().isOn()) {
+                    System.out.println("The sprinkler in " + room.getName() + " has been turned off");
+                    room.getSprinkler().turnOff();
+                    sprinklersAreOn = false;
+                }
+            }
         }
     }
 
@@ -183,8 +175,7 @@ public class CentralControlSystem {
         if (siren.getSirenStatus()) {
             System.out.println("The siren has been turned off");
             siren.turnOff();
-        }
-        else {
+        } else {
             System.out.println("The siren is already off");
         }
     }
