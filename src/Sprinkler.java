@@ -1,5 +1,5 @@
 public class Sprinkler implements Device {
-    private String name;
+    private final String name;
     private boolean isOn;
 
     public Sprinkler(String name) {
@@ -10,7 +10,7 @@ public class Sprinkler implements Device {
     @Override
     public void turnOn() {
         isOn = true;
-        System.out.print("(((Sprinkler noises)))");
+        System.out.print("(((Sprinkler sounds)))");
     }
 
     @Override
@@ -22,15 +22,8 @@ public class Sprinkler implements Device {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public boolean isOn() {
         return isOn;
     }
 
-    public void setOn(boolean on) {
-        isOn = on;
-    }
 }
